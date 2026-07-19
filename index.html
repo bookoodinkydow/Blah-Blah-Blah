@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Loading...</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- dimmed/tinted screenshots cycle behind everything, controlled from script.js -->
+  <div id="bg-layer"></div>
+  <div id="bg-layer-2"></div>
+
+  <!-- faint retro grain + scanlines, purely decorative -->
+  <div id="noise-overlay"></div>
+  <div id="scanline-overlay"></div>
+
+  <div id="page">
+
+    <!-- ============ MAIN PANEL ============ -->
+    <div class="win-panel" id="main-panel">
+      <div class="win-titlebar">
+        <span id="titlebar-text">Connecting to server...</span>
+      </div>
+
+      <div class="win-body">
+
+        <div id="logo-block">
+          <span id="logo-text-1">WASTELAND</span><span id="logo-text-2">RP</span>
+        </div>
+        <div id="tagline">Loading placeholder tagline...</div>
+
+        <table class="info-table">
+          <tr>
+            <td class="info-label">Map:</td>
+            <td class="info-value" id="field-map">Loading map...</td>
+          </tr>
+          <tr>
+            <td class="info-label">Gamemode:</td>
+            <td class="info-value" id="field-gamemode">Loading gamemode...</td>
+          </tr>
+          <tr>
+            <td class="info-label">Max Players:</td>
+            <td class="info-value" id="field-maxplayers">--</td>
+          </tr>
+          <tr>
+            <td class="info-label">Player:</td>
+            <td class="info-value" id="field-player">Unknown Survivor</td>
+          </tr>
+        </table>
+
+        <div id="status-line">Retrieving server info...</div>
+
+        <div class="progress-outer">
+          <div class="progress-inner" id="progress-bar"></div>
+          <div class="progress-label" id="progress-label">0%</div>
+        </div>
+
+        <div id="current-download">&nbsp;</div>
+
+        <!-- scrolling console-style file log -->
+        <div id="file-log"></div>
+
+      </div>
+    </div>
+
+    <!-- ============ TIPS PANEL ============ -->
+    <div class="win-panel" id="tips-panel">
+      <div class="win-titlebar">
+        <span>Server Tips</span>
+      </div>
+      <div class="win-body">
+        <div id="tips-text">Loading tips...</div>
+      </div>
+    </div>
+
+    <div id="footer-text">v0.9.0.4 build 2005 &mdash; Loading... please wait</div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

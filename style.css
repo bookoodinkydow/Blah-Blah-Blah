@@ -1,0 +1,294 @@
+/* ============================================================
+   Wasteland RP loading screen
+   Retro "Source engine 2005 / GMod 9" look.
+   All colors/sizes are CSS variables here so they're easy to tweak.
+   ============================================================ */
+
+:root {
+  /* -- palette -- */
+  --bg-tan:          #d6cfc0;
+  --bg-tan-dark:     #c4bba8;
+  --panel-face:      #ded7c8;
+  --panel-border:    #3a2f25;
+  --bevel-light:     #f2ece0;
+  --bevel-dark:      #8a8172;
+
+  --orange:          #e8791e;
+  --orange-dark:     #cd6600;
+  --orange-darker:   #a35102;
+
+  --text-dark:       #3a2f25;
+  --text-muted:      #6b6255;
+
+  --progress-empty:  #b8ae9a;
+  --progress-fill-1: #e8791e;
+  --progress-fill-2: #cd6600;
+
+  --console-bg:      #2b2419;
+  --console-text:    #d9c9a3;
+
+  /* -- type -- */
+  --font-main: Tahoma, Verdana, "Trebuchet MS", Arial, sans-serif;
+  --font-header: "Trebuchet MS", Tahoma, Verdana, sans-serif;
+  --font-size-base: 12px;
+  --font-size-small: 11px;
+  --font-size-header: 13px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-tan);
+  font-family: var(--font-main);
+  font-size: var(--font-size-base);
+  color: var(--text-dark);
+}
+
+/* ---------- background screenshot crossfade layers ---------- */
+#bg-layer, #bg-layer-2 {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-size: cover;
+  background-position: center;
+  /* sepia/dimmed so panels stay readable on top */
+  filter: sepia(0.55) brightness(0.45) saturate(0.8);
+  opacity: 0;
+  transition: opacity 2.5s ease-in-out;
+  z-index: 0;
+}
+
+/* ---------- fallback plain textured background ---------- */
+body.no-screenshots {
+  background-image:
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 1px, transparent 1px, transparent 3px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.015) 0px, rgba(0,0,0,0.015) 1px, transparent 1px, transparent 3px);
+  background-color: var(--bg-tan);
+}
+
+/* ---------- noise / grain overlay ---------- */
+#noise-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- scanline overlay ---------- */
+#scanline-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0.06;
+  background: repeating-linear-gradient(
+    to bottom,
+    #000 0px,
+    #000 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* ---------- page layout ---------- */
+#page {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* ============================================================
+   "Window" panel style: boxy, beveled border, faux titlebar
+   ============================================================ */
+.win-panel {
+  width: 460px;
+  background: var(--panel-face);
+  border: 1px solid var(--panel-border);
+  box-shadow:
+    inset 1px 1px 0 var(--bevel-light),
+    inset -1px -1px 0 var(--bevel-dark),
+    2px 2px 0 rgba(0,0,0,0.35);
+}
+
+.win-titlebar {
+  background: linear-gradient(to bottom, var(--orange) 0%, var(--orange-dark) 55%, var(--orange-darker) 100%);
+  border-bottom: 1px solid var(--panel-border);
+  color: #fff8ee;
+  font-family: var(--font-header);
+  font-weight: bold;
+  font-size: var(--font-size-header);
+  padding: 4px 8px;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+  letter-spacing: 0.5px;
+}
+
+.win-body {
+  padding: 12px 14px 14px 14px;
+}
+
+/* ============================================================
+   Main panel contents
+   ============================================================ */
+#logo-block {
+  font-family: var(--font-header);
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+#logo-text-1 {
+  color: var(--text-dark);
+}
+
+#logo-text-2 {
+  background: var(--orange-dark);
+  color: #fff8ee;
+  padding: 1px 6px;
+  margin-left: 2px;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+}
+
+#tagline {
+  font-size: var(--font-size-small);
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--bevel-dark);
+  padding-bottom: 8px;
+}
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  font-size: var(--font-size-small);
+}
+
+.info-table td {
+  padding: 1px 0;
+}
+
+.info-label {
+  width: 100px;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
+.info-value {
+  color: var(--orange-darker);
+  font-weight: bold;
+}
+
+#status-line {
+  font-size: var(--font-size-small);
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: var(--text-dark);
+}
+
+/* chunky rectangular progress bar - no rounded corners, no glow */
+.progress-outer {
+  position: relative;
+  width: 100%;
+  height: 22px;
+  background: var(--progress-empty);
+  border: 1px solid var(--panel-border);
+  box-shadow:
+    inset 1px 1px 0 rgba(0,0,0,0.25),
+    inset -1px -1px 0 var(--bevel-light);
+  margin-bottom: 6px;
+}
+
+.progress-inner {
+  height: 100%;
+  width: 0%;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--progress-fill-1) 0px,
+    var(--progress-fill-1) 10px,
+    var(--progress-fill-2) 10px,
+    var(--progress-fill-2) 20px
+  );
+  border-right: 1px solid var(--panel-border);
+  transition: width 0.3s ease-out;
+}
+
+.progress-label {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-small);
+  font-weight: bold;
+  color: var(--text-dark);
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+}
+
+#current-download {
+  font-size: var(--font-size-small);
+  color: var(--text-muted);
+  min-height: 14px;
+  margin-bottom: 4px;
+}
+
+/* console-style scrolling file log */
+#file-log {
+  height: 64px;
+  overflow-y: auto;
+  background: var(--console-bg);
+  color: var(--console-text);
+  border: 1px solid var(--panel-border);
+  box-shadow: inset 1px 1px 0 rgba(0,0,0,0.5);
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  padding: 4px 6px;
+  line-height: 1.4;
+}
+
+#file-log div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   Tips panel
+   ============================================================ */
+#tips-panel {
+  width: 460px;
+}
+
+#tips-panel .win-body {
+  min-height: 34px;
+}
+
+#tips-text {
+  font-size: var(--font-size-small);
+  color: var(--text-dark);
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+#footer-text {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
+}
