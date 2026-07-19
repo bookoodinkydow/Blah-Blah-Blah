@@ -1,38 +1,38 @@
 /* ============================================================
-   Wasteland RP loading screen
-   Retro "Source engine 2005 / GMod 9" look.
+   HolyPhuck's Community Server - loading screen
+   Main "welcome" panel is a modern glass card.
+   Tips panel + footer keep a lighter, simplified version of the
+   original warm/orange GMod-y look (no more heavy retro/2005 look).
    All colors/sizes are CSS variables here so they're easy to tweak.
    ============================================================ */
 
 :root {
-  /* -- palette -- */
+  /* -- shared palette -- */
   --bg-tan:          #d6cfc0;
-  --bg-tan-dark:     #c4bba8;
-  --panel-face:      #ded7c8;
-  --panel-border:    #3a2f25;
-  --bevel-light:     #f2ece0;
-  --bevel-dark:      #8a8172;
-
   --orange:          #e8791e;
   --orange-dark:     #cd6600;
-  --orange-darker:   #a35102;
+  --orange-light:    #ffb454;
 
   --text-dark:       #3a2f25;
   --text-muted:      #6b6255;
 
-  --progress-empty:  #b8ae9a;
-  --progress-fill-1: #e8791e;
-  --progress-fill-2: #cd6600;
-
-  --console-bg:      #2b2419;
-  --console-text:    #d9c9a3;
-
-  /* -- type -- */
-  --font-main: Tahoma, Verdana, "Trebuchet MS", Arial, sans-serif;
-  --font-header: "Trebuchet MS", Tahoma, Verdana, sans-serif;
-  --font-size-base: 12px;
+  /* -- classic (tips panel / footer) -- */
+  --panel-face:      #ded7c8;
+  --panel-border:    #3a2f25;
+  --font-classic: Tahoma, Verdana, "Trebuchet MS", Arial, sans-serif;
   --font-size-small: 11px;
   --font-size-header: 13px;
+
+  /* -- modern (main welcome panel) -- */
+  --font-modern: -apple-system, "Segoe UI", "Helvetica Neue", Roboto, Arial, sans-serif;
+  --accent-grad: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+  --modern-panel-bg:     rgba(26, 19, 13, 0.6);
+  --modern-panel-border: rgba(255, 255, 255, 0.09);
+  --modern-radius:       16px;
+  --text-light:          #f6ede0;
+  --text-light-muted:    rgba(246, 237, 224, 0.65);
+  --chip-bg:             rgba(255, 255, 255, 0.05);
+  --chip-border:         rgba(255, 255, 255, 0.09);
 }
 
 * {
@@ -46,8 +46,8 @@ html, body {
   height: 100%;
   overflow: hidden;
   background: var(--bg-tan);
-  font-family: var(--font-main);
-  font-size: var(--font-size-base);
+  font-family: var(--font-modern);
+  font-size: 13px;
   color: var(--text-dark);
 }
 
@@ -57,8 +57,7 @@ html, body {
   top: 0; left: 0; right: 0; bottom: 0;
   background-size: cover;
   background-position: center;
-  /* sepia/dimmed so panels stay readable on top */
-  filter: sepia(0.55) brightness(0.45) saturate(0.8);
+  filter: sepia(0.45) brightness(0.4) saturate(0.85);
   opacity: 0;
   transition: opacity 2.5s ease-in-out;
   z-index: 0;
@@ -72,30 +71,14 @@ body.no-screenshots {
   background-color: var(--bg-tan);
 }
 
-/* ---------- noise / grain overlay ---------- */
+/* ---------- faint grain overlay (kept subtle, not a CRT effect) ---------- */
 #noise-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   z-index: 5;
   pointer-events: none;
-  opacity: 0.05;
+  opacity: 0.035;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-}
-
-/* ---------- scanline overlay ---------- */
-#scanline-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 6;
-  pointer-events: none;
-  opacity: 0.06;
-  background: repeating-linear-gradient(
-    to bottom,
-    #000 0px,
-    #000 1px,
-    transparent 1px,
-    transparent 3px
-  );
 }
 
 /* ---------- page layout ---------- */
@@ -108,157 +91,185 @@ body.no-screenshots {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 /* ============================================================
-   "Window" panel style: boxy, beveled border, faux titlebar
+   MAIN PANEL - modern glass card
    ============================================================ */
-.win-panel {
-  width: 460px;
-  background: var(--panel-face);
-  border: 1px solid var(--panel-border);
+.panel-modern {
+  width: 480px;
+  background: var(--modern-panel-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--modern-panel-border);
+  border-radius: var(--modern-radius);
   box-shadow:
-    inset 1px 1px 0 var(--bevel-light),
-    inset -1px -1px 0 var(--bevel-dark),
-    2px 2px 0 rgba(0,0,0,0.35);
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  padding: 28px 30px 24px;
+  color: var(--text-light);
 }
 
-.win-titlebar {
-  background: linear-gradient(to bottom, var(--orange) 0%, var(--orange-dark) 55%, var(--orange-darker) 100%);
-  border-bottom: 1px solid var(--panel-border);
-  color: #fff8ee;
-  font-family: var(--font-header);
-  font-weight: bold;
-  font-size: var(--font-size-header);
-  padding: 4px 8px;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
-  letter-spacing: 0.5px;
-}
-
-.win-body {
-  padding: 12px 14px 14px 14px;
-}
-
-/* ============================================================
-   Main panel contents
-   ============================================================ */
 #logo-block {
-  font-family: var(--font-header);
-  font-weight: bold;
-  font-size: 26px;
-  line-height: 1;
   margin-bottom: 4px;
 }
 
-#logo-text-1 {
-  color: var(--text-dark);
+#logo-text {
+  font-family: var(--font-modern);
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -0.3px;
+  line-height: 1.15;
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: var(--orange-light); /* fallback if background-clip:text isn't supported */
+  -webkit-text-fill-color: transparent;
 }
 
-#logo-text-2 {
-  background: var(--orange-dark);
-  color: #fff8ee;
-  padding: 1px 6px;
-  margin-left: 2px;
-  box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+#logo-accent {
+  width: 56px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent-grad);
+  margin-top: 8px;
 }
 
 #tagline {
-  font-size: var(--font-size-small);
-  color: var(--text-muted);
+  font-size: 12.5px;
+  color: var(--text-light-muted);
+  margin: 10px 0 18px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 10px;
+  margin-bottom: 16px;
+}
+
+.info-chip {
+  background: var(--chip-bg);
+  border: 1px solid var(--chip-border);
+  border-radius: 10px;
+  padding: 7px 12px;
+}
+
+.info-chip-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-light-muted);
+  margin-bottom: 2px;
+}
+
+.info-chip-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#admins-block {
+  margin-bottom: 16px;
+}
+
+.section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-light-muted);
+  margin-bottom: 6px;
+}
+
+#admins-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.admin-chip {
+  background: rgba(232, 121, 30, 0.18);
+  border: 1px solid rgba(232, 121, 30, 0.45);
+  color: #ffd9a8;
+  padding: 3px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.admins-empty {
+  font-size: 11.5px;
+  color: var(--text-light-muted);
   font-style: italic;
-  margin-bottom: 10px;
-  border-bottom: 1px solid var(--bevel-dark);
-  padding-bottom: 8px;
-}
-
-.info-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 10px;
-  font-size: var(--font-size-small);
-}
-
-.info-table td {
-  padding: 1px 0;
-}
-
-.info-label {
-  width: 100px;
-  font-weight: bold;
-  color: var(--text-dark);
-}
-
-.info-value {
-  color: var(--orange-darker);
-  font-weight: bold;
 }
 
 #status-line {
-  font-size: var(--font-size-small);
-  font-weight: bold;
-  margin-bottom: 4px;
-  color: var(--text-dark);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-light-muted);
+  margin-bottom: 8px;
 }
 
-/* chunky rectangular progress bar - no rounded corners, no glow */
+/* modern pill progress bar */
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
 .progress-outer {
   position: relative;
-  width: 100%;
-  height: 22px;
-  background: var(--progress-empty);
-  border: 1px solid var(--panel-border);
-  box-shadow:
-    inset 1px 1px 0 rgba(0,0,0,0.25),
-    inset -1px -1px 0 var(--bevel-light);
-  margin-bottom: 6px;
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 999px;
+  overflow: hidden;
 }
 
 .progress-inner {
   height: 100%;
   width: 0%;
-  background: repeating-linear-gradient(
-    45deg,
-    var(--progress-fill-1) 0px,
-    var(--progress-fill-1) 10px,
-    var(--progress-fill-2) 10px,
-    var(--progress-fill-2) 20px
-  );
-  border-right: 1px solid var(--panel-border);
+  border-radius: 999px;
+  background: var(--accent-grad);
+  box-shadow: 0 0 10px rgba(232, 121, 30, 0.55);
   transition: width 0.3s ease-out;
 }
 
 .progress-label {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-small);
-  font-weight: bold;
-  color: var(--text-dark);
-  text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-light);
+  min-width: 32px;
+  text-align: right;
 }
 
 #current-download {
-  font-size: var(--font-size-small);
-  color: var(--text-muted);
+  font-size: 11px;
+  color: var(--text-light-muted);
   min-height: 14px;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* console-style scrolling file log */
 #file-log {
-  height: 64px;
+  height: 58px;
   overflow-y: auto;
-  background: var(--console-bg);
-  color: var(--console-text);
-  border: 1px solid var(--panel-border);
-  box-shadow: inset 1px 1px 0 rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.35);
+  color: rgba(246, 237, 224, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
   font-family: "Courier New", monospace;
   font-size: 10px;
-  padding: 4px 6px;
-  line-height: 1.4;
+  padding: 6px 10px;
+  line-height: 1.5;
 }
 
 #file-log div {
@@ -268,14 +279,29 @@ body.no-screenshots {
 }
 
 /* ============================================================
-   Tips panel
+   TIPS PANEL - lighter version of the classic warm/orange look
    ============================================================ */
-#tips-panel {
-  width: 460px;
+.win-panel {
+  width: 480px;
+  background: var(--panel-face);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  font-family: var(--font-classic);
 }
 
-#tips-panel .win-body {
-  min-height: 34px;
+.win-titlebar {
+  background: linear-gradient(to bottom, var(--orange) 0%, var(--orange-dark) 100%);
+  border-bottom: 1px solid var(--panel-border);
+  border-radius: 5px 5px 0 0;
+  color: #fff8ee;
+  font-weight: bold;
+  font-size: var(--font-size-header);
+  padding: 5px 10px;
+}
+
+.win-body {
+  padding: 10px 14px 12px;
 }
 
 #tips-text {
@@ -287,8 +313,8 @@ body.no-screenshots {
    Footer
    ============================================================ */
 #footer-text {
-  font-size: 10px;
+  font-family: var(--font-classic);
+  font-size: 10.5px;
   color: var(--text-muted);
-  font-style: italic;
-  text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
 }

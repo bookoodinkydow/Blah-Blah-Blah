@@ -1,11 +1,20 @@
 // ============================================================
-// Wasteland RP loading screen
-// Edit SERVER_NAME, TIPS, and BACKGROUND_IMAGES below to customize.
+// HolyPhuck's Community Server loading screen
+// Edit SERVER_NAME, TAGLINE, ADMINS_ONLINE, TIPS, and
+// BACKGROUND_IMAGES below to customize.
 // Colors live in style.css as CSS variables (:root { ... }).
 // ============================================================
 
-var SERVER_NAME = "WASTELAND RP"; // <-- change this to your server's name
-var TAGLINE = "Survive the wasteland. Trust no one.";
+var SERVER_NAME = "HolyPhuck's Community Server"; // <-- change this to your server's name
+var TAGLINE = "Welcome back. Let's get you loaded in.";
+
+// Static list of admins/staff to display. Not live server data — just
+// edit this list by hand when your staff roster changes.
+var ADMINS_ONLINE = [
+  "HolyPhuck",
+  "Admin2",
+  "Admin3"
+];
 
 // Rotating tips shown in the small panel. Add/remove as many as you like.
 var TIPS = [
@@ -74,8 +83,30 @@ function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemo
 
   if (servername) {
     document.title = servername;
-    setText("titlebar-text", "Connecting to " + servername + "...");
   }
+}
+
+// Renders the static ADMINS_ONLINE list as chips in the main panel.
+function renderAdmins() {
+  var list = document.getElementById("admins-list");
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  if (!ADMINS_ONLINE || ADMINS_ONLINE.length === 0) {
+    var empty = document.createElement("div");
+    empty.className = "admins-empty";
+    empty.textContent = "No admins currently online.";
+    list.appendChild(empty);
+    return;
+  }
+
+  ADMINS_ONLINE.forEach(function (name) {
+    var chip = document.createElement("div");
+    chip.className = "admin-chip";
+    chip.textContent = name;
+    list.appendChild(chip);
+  });
 }
 
 // Total number of files that will be checked/downloaded this session.
@@ -194,23 +225,23 @@ function initDemoMode() {
   GameDetails(
     SERVER_NAME,
     window.location.href,
-    mapParam || "gm_wasteland",
+    mapParam || "gm_flatgrass",
     "32",
-    steamidParam || "Survivor_Cameron",
-    "DarkRP: Wasteland Edition"
+    steamidParam || "Player123",
+    "DarkRP"
   );
 
   SetStatusChanged("Retrieving server info...");
 
   var demoFiles = [
-    "materials/wasteland/rust_metal_01.vmt",
-    "models/props_wasteland/barricade_02.mdl",
-    "sound/ambient/wasteland_wind_loop.wav",
-    "materials/hud/wasteland_hud_sheet.vtf",
-    "lua/autorun/wasteland_core.lua",
-    "resource/fonts/wasteland_ui.ttf",
-    "models/weapons/w_pipe_rifle.mdl",
-    "materials/skybox/wasteland_dusk.vtf"
+    "materials/community/logo_sheet.vtf",
+    "models/props_community/vending_01.mdl",
+    "sound/ambient/community_lobby_loop.wav",
+    "materials/hud/community_hud_sheet.vtf",
+    "lua/autorun/community_core.lua",
+    "resource/fonts/community_ui.ttf",
+    "models/weapons/w_pistol.mdl",
+    "materials/skybox/community_sky.vtf"
   ];
 
   var total = demoFiles.length;
@@ -238,9 +269,9 @@ function initDemoMode() {
 // Init
 // ============================================================
 document.addEventListener("DOMContentLoaded", function () {
-  setText("logo-text-1", SERVER_NAME.split(" ").slice(0, -1).join(" ") || SERVER_NAME);
-  setText("logo-text-2", SERVER_NAME.split(" ").slice(-1).join(" "));
+  setText("logo-text", SERVER_NAME);
   setText("tagline", TAGLINE);
+  renderAdmins();
 
   startTipsRotation();
   startBackgroundCycle();
